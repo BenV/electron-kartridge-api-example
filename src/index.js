@@ -11,13 +11,15 @@ const initialized = api.KongregateAPI_Initialize(null) === 1;
 if (initialized) {
   console.log('Kartridge API initialized successfully');
   setInterval(api.KongregateAPI_Update, 100);
-  api.KongregateAPI_SetEventListener((name) => {
+
+  // Use createEventListenerCallback to avoid the callback from being garbage collected
+  api.KongregateAPI_SetEventListener(kartridgeApi.createEventListenerCallback((name) => {
     console.log(`Kartridge API event: ${name}`);
     if (name === 'ready') {
       console.log(`Kartridge API ready, userID: ${api.KongregateServices_GetUserId()}, username: ${api.KongregateServices_GetUsername()}`);
       api.KongregateStats_Submit('score', Math.floor(Math.random() * 10000));
     }
-  });
+  }));
 }
 
 // Keep a global reference of the window object, if you don't, the window will

@@ -55,3 +55,9 @@ exports.library = new FFI.Library(LIBRARY_NAME, {
     ref.types.uint32,
   ]],
 });
+
+exports.createEventListenerCallback = (fn) => {
+  const callback = FFI.Callback(ref.types.void, [ref.types.CString, ref.types.CString], fn);
+  process.on('exit', () => callback);
+  return callback;
+};

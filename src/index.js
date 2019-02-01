@@ -1,6 +1,14 @@
 import { app, BrowserWindow } from 'electron';
+import { addBypassChecker } from 'electron-compile';
+
 const kartridgeApi = require('./kartridge_api');
+
 const api = kartridgeApi.library;
+
+// You may or may not need this, but it helps get around an issue where
+// local files can not be accessed properly once the app is packaged:
+// https://github.com/electron-userland/electron-forge/issues/153
+addBypassChecker(filePath => filePath.indexOf(app.getAppPath()) === -1);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
